@@ -114,6 +114,20 @@
             box-shadow:
                 0 10px 25px rgba(37, 99, 235, 0.18);
         }
+
+        /* mobile touch improvements */
+        @media (max-width: 767px) {
+            .nav-blur .flex {
+                min-height: 56px;
+            }
+            .nav-blur h1 {
+                font-size: 1rem;
+            }
+            .nav-blur img {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -126,7 +140,7 @@
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div class="flex justify-between items-center h-20">
+                <div class="flex justify-between items-center h-16 md:h-20">
 
                     <!-- Logo -->
                     <div class="flex items-center gap-4">
@@ -135,11 +149,11 @@
 
                         <div>
 
-                            <h1 class="font-bold text-xl leading-tight text-slate-800">
+                            <h1 class="font-bold text-lg md:text-xl leading-tight text-slate-800">
                                 Sistem Penjadwalan
                             </h1>
 
-                            <p class="text-slate-500 text-sm">
+                            <p class="text-slate-500 text-sm hidden md:block">
                                 Fakultas Teknik Universitas Wiraraja
                             </p>
 
@@ -148,18 +162,18 @@
                     </div>
 
                     <!-- Menu -->
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 md:gap-4">
 
                         <a href="{{ route('login') }}"
-                            class="px-5 py-2 text-slate-700 hover:bg-blue-50 rounded-xl transition flex items-center gap-2">
+                            class="px-3 md:px-5 py-1.5 md:py-2 text-slate-700 hover:bg-blue-50 rounded-xl transition flex items-center gap-1.5 md:gap-2 text-sm md:text-base">
                             <i class="fas fa-sign-in-alt text-blue-500"></i>
-                            Login
+                            <span class="hidden md:inline">Login</span>
                         </a>
 
                         <a href="{{ route('jadwalglobal.list') }}"
-                            class="px-5 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-2 font-semibold glow">
+                            class="px-3 md:px-5 py-1.5 md:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-1.5 md:gap-2 font-semibold glow text-sm md:text-base">
                             <i class="fas fa-calendar"></i>
-                            Jadwal
+                            <span class="hidden md:inline">Jadwal</span>
                         </a>
 
                     </div>
@@ -171,21 +185,21 @@
         </nav>
 
         <!-- Hero -->
-        <section class="relative flex items-center justify-center min-h-screen px-6 md:px-10 pt-28 mb-12">
+        <section class="relative flex items-center justify-center md:min-h-screen px-4 md:px-10 pt-24 md:pt-28 mb-4 md:mb-12">
 
-            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-4 md:gap-16 items-center">
 
                 <!-- Left -->
-                <div>
+                <div class="order-2 md:order-1">
 
-                    <h1 class="text-4xl md:text-5xl font-black hero-title mb-6">
+                    <h1 class="text-[1.5rem] md:text-5xl font-black hero-title mb-2 md:mb-6">
                         Fakultas Teknik
                         <span>Universitas Wiraraja</span>
                         Sumenep Madura
                     </h1>
 
                     <!-- Deskripsi + Statistik -->
-                    <p class="text-lg md:text-xl leading-relaxed max-w-2xl font-light mb-8 text-soft">
+                    <p class="text-xs md:text-xl leading-relaxed max-w-2xl font-light mb-3 md:mb-8 text-soft">
 
                         <span class="font-semibold text-blue-700">
                             Sistem penjadwalan mata kuliah otomatis
@@ -194,38 +208,40 @@
                         efektif, dan meminimalkan bentrok jadwal dosen,
                         ruangan, maupun kelas.
 
-                        Saat ini sistem memiliki
-                        <span class="font-bold text-blue-700">
-                            {{ number_format($totalMatkul, 0, ',', '.') }}
-                        </span>
-                        mata kuliah yang terdiri dari
-                        <span class="font-semibold text-blue-700">
-                            {{ number_format($matkulGanjil, 0, ',', '.') }}
-                        </span>
-                        semester ganjil dan
-                        <span class="font-semibold text-blue-700">
-                            {{ number_format($matkulGenap, 0, ',', '.') }}
-                        </span>
-                        semester genap, dengan
-                        <span class="font-bold text-blue-700">
-                            {{ number_format($totalDosen, 0, ',', '.') }}
-                        </span>
-                        dosen,
-                        <span class="font-bold text-blue-700">
-                            {{ number_format($totalRuangan, 0, ',', '.') }}
-                        </span>
-                        ruangan, serta
-                        <span class="font-bold text-blue-700">
-                            {{ number_format($totalKelas, 0, ',', '.') }}
-                        </span>
-                        kelas aktif yang digunakan dalam proses penjadwalan.
-
                     </p>
+
+                    <!-- Mobile stat badges -->
+                    <div class="flex flex-wrap gap-1.5 md:gap-2 mb-3 md:mb-8">
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-book text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($totalMatkul, 0, ',', '.') }} Matkul
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-chalkboard-teacher text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($totalDosen, 0, ',', '.') }} Dosen
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-door-open text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($totalRuangan, 0, ',', '.') }} Ruangan
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-users text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($totalKelas, 0, ',', '.') }} Kelas
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-sun text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($matkulGanjil, 0, ',', '.') }} Ganjil
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 bg-blue-100 text-blue-800 text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full">
+                            <i class="fas fa-moon text-blue-500 text-[10px] md:text-xs"></i>
+                            {{ number_format($matkulGenap, 0, ',', '.') }} Genap
+                        </span>
+                    </div>
                     <!-- Button -->
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-col md:flex-row gap-2 md:gap-4">
 
                         <a href="{{ route('login') }}"
-                            class="px-8 py-4 bg-white border border-blue-200 text-blue-700 font-semibold rounded-2xl shadow-sm hover:bg-blue-50 btn-primary flex items-center gap-3">
+                            class="w-full md:w-auto px-5 md:px-8 py-2.5 md:py-4 bg-white border border-blue-200 text-blue-700 font-semibold rounded-xl md:rounded-2xl shadow-sm hover:bg-blue-50 btn-primary flex items-center justify-center gap-2 text-xs md:text-base">
 
                             <i class="fas fa-sign-in-alt"></i>
                             Login Admin / Kaprodi
@@ -233,7 +249,7 @@
                         </a>
 
                         <a href="{{ route('jadwalglobal.list') }}"
-                            class="px-8 py-4 bg-blue-600 text-white font-semibold rounded-2xl shadow-lg hover:bg-blue-700 btn-primary flex items-center gap-3 glow">
+                            class="w-full md:w-auto px-5 md:px-8 py-2.5 md:py-4 bg-blue-600 text-white font-semibold rounded-xl md:rounded-2xl shadow-lg hover:bg-blue-700 btn-primary flex items-center justify-center gap-2 glow text-xs md:text-base">
 
                             <i class="fas fa-calendar-week"></i>
                             Lihat Jadwal
@@ -245,12 +261,12 @@
                 </div>
 
                 <!-- Right -->
-                <div class="relative floating">
+                <div class="relative floating order-1 md:order-2">
 
-                    <div class="glass rounded-3xl p-1">
+                    <div class="glass rounded-xl md:rounded-3xl p-0.5 md:p-1">
 
                         <img src="{{ asset('image/bg.jpg') }}" alt="Background Fakultas Teknik"
-                            class="w-full h-[420px] object-cover rounded-3xl">
+                            class="w-full h-[160px] md:h-[420px] object-cover rounded-xl md:rounded-3xl">
 
                     </div>
 
@@ -261,18 +277,18 @@
         </section>
 
         <!-- Keterangan Sistem -->
-        <section class="pb-24 px-6 md:px-10">
+        <section class="pb-10 md:pb-24 px-4 md:px-10">
 
             <div class="max-w-6xl mx-auto">
 
                 <!-- Heading -->
-                <div class="text-center mb-14">
+                <div class="text-center mb-6 md:mb-14">
 
-                    <h2 class="text-3xl md:text-5xl section-title mb-4">
+                    <h2 class="text-xl md:text-5xl section-title mb-2 md:mb-4">
                         Keterangan Sistem
                     </h2>
 
-                    <p class="text-soft text-sm md:text-lg max-w-3xl mx-auto leading-relaxed">
+                    <p class="text-soft text-xs md:text-lg max-w-3xl mx-auto leading-relaxed px-2 md:px-0">
                         Sistem Penjadwalan Mata Kuliah Otomatis menggunakan
                         metode Ant Colony Optimization (ACO) untuk membantu
                         proses penyusunan jadwal perkuliahan secara otomatis,
@@ -282,20 +298,20 @@
                 </div>
 
                 <!-- Card -->
-                <div class="grid md:grid-cols-2 gap-6">
+                <div class="grid md:grid-cols-2 gap-3 md:gap-6">
 
                     <!-- Card 1 -->
-                    <div class="glass rounded-3xl p-6 md:p-8 card-hover">
+                    <div class="glass rounded-xl md:rounded-3xl p-4 md:p-8 card-hover">
 
-                        <div class="text-4xl mb-4 text-blue-500">
+                        <div class="text-xl md:text-4xl mb-2 md:mb-4 text-blue-500">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
 
-                        <h3 class="text-xl font-bold mb-3 text-slate-800">
+                        <h3 class="text-sm md:text-xl font-bold mb-1 md:mb-3 text-slate-800">
                             Penanganan Bentrok Jadwal
                         </h3>
 
-                        <p class="text-soft leading-relaxed">
+                        <p class="text-soft text-xs md:text-base leading-relaxed">
                             Sistem dapat menangani bentrok jadwal dosen,
                             ruangan, dan kelas sehingga jadwal perkuliahan
                             dapat tersusun lebih teratur dan efisien.
@@ -304,17 +320,17 @@
                     </div>
 
                     <!-- Card 2 -->
-                    <div class="glass rounded-3xl p-6 md:p-8 card-hover">
+                    <div class="glass rounded-xl md:rounded-3xl p-4 md:p-8 card-hover">
 
-                        <div class="text-4xl mb-4 text-blue-500">
+                        <div class="text-xl md:text-4xl mb-2 md:mb-4 text-blue-500">
                             <i class="fas fa-sliders-h"></i>
                         </div>
 
-                        <h3 class="text-xl font-bold mb-3 text-slate-800">
+                        <h3 class="text-sm md:text-xl font-bold mb-1 md:mb-3 text-slate-800">
                             Constraint / Batasan Sistem
                         </h3>
 
-                        <p class="text-soft leading-relaxed">
+                        <p class="text-soft text-xs md:text-base leading-relaxed">
                             Sistem menerapkan constraint seperti
                             ketersediaan dosen, penggunaan ruangan tertentu,
                             dan penyesuaian slot jadwal perkuliahan.
@@ -323,17 +339,17 @@
                     </div>
 
                     <!-- Card 3 -->
-                    <div class="glass rounded-3xl p-6 md:p-8 card-hover">
+                    <div class="glass rounded-xl md:rounded-3xl p-4 md:p-8 card-hover">
 
-                        <div class="text-4xl mb-4 text-blue-500">
+                        <div class="text-xl md:text-4xl mb-2 md:mb-4 text-blue-500">
                             <i class="fas fa-door-open"></i>
                         </div>
 
-                        <h3 class="text-xl font-bold mb-3 text-slate-800">
+                        <h3 class="text-sm md:text-xl font-bold mb-1 md:mb-3 text-slate-800">
                             Penyesuaian Ruangan
                         </h3>
 
-                        <p class="text-soft leading-relaxed">
+                        <p class="text-soft text-xs md:text-base leading-relaxed">
                             Sistem menyesuaikan kapasitas dan jenis ruangan
                             sesuai kebutuhan kelas dan mata kuliah agar
                             pembelajaran berjalan optimal.
@@ -342,17 +358,17 @@
                     </div>
 
                     <!-- Card 4 -->
-                    <div class="glass rounded-3xl p-6 md:p-8 card-hover">
+                    <div class="glass rounded-xl md:rounded-3xl p-4 md:p-8 card-hover">
 
-                        <div class="text-4xl mb-4 text-blue-500">
+                        <div class="text-xl md:text-4xl mb-2 md:mb-4 text-blue-500">
                             <i class="fas fa-moon"></i>
                         </div>
 
-                        <h3 class="text-xl font-bold mb-3 text-slate-800">
+                        <h3 class="text-sm md:text-xl font-bold mb-1 md:mb-3 text-slate-800">
                             Jadwal Ramadan
                         </h3>
 
-                        <p class="text-soft leading-relaxed">
+                        <p class="text-soft text-xs md:text-base leading-relaxed">
                             Sistem mendukung penyesuaian jadwal Ramadan
                             dengan durasi perkuliahan 35 menit per SKS.
                         </p>
@@ -366,7 +382,7 @@
         </section>
 
         <!-- Footer -->
-        <footer class="border-t border-blue-100 py-8 text-center">
+        <footer class="border-t border-blue-100 py-4 md:py-8 text-center">
 
             <p class="font-semibold text-slate-700">
                 © {{ date('Y') }}

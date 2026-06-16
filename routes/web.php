@@ -22,6 +22,7 @@ Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 Route::get('/schedule/list', [jadwalglobalController::class, 'listSchedule'])->name('jadwalglobal.list');
 Route::get('/schedule/cetak', [jadwalglobalController::class, 'cetak'])->name('jadwalglobal.cetak');
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -30,6 +31,7 @@ Route::get('/get-max-ruangan-capacity', [ControllersKelasController::class, 'get
 Route::middleware(['auth'])->group(function () {
     Route::get('/schedule', [jadwalController::class, 'index'])->name('jadwalauth.index');
     Route::get('/jadwal/cetak', [jadwalController::class, 'cetak'])->name('jadwalauth.cetak');
+
     Route::get('/jadwal/analisis-slot', [jadwalController::class, 'showAnalisisSlot'])->name('jadwal.analisis-slot');
     Route::post('/matakuliah/cek-ketersediaan-ruangan', [ControllersMataKuliahController::class, 'cekKetersediaanRuangan']);
     Route::resource('matakuliah', ControllersMataKuliahController::class);

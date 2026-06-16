@@ -27,6 +27,17 @@
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
         }
 
+        .nav-blur {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(14px);
+            border-bottom: 2px solid rgba(37, 99, 235, 0.15);
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.06);
+        }
+
+        .glow {
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.18);
+        }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -71,15 +82,43 @@
         }
 
         th {
-            @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider bg-gray-50;
+            @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider;
         }
 
         td {
-            @apply px-4 py-3 text-sm text-gray-700;
+            @apply px-4 py-3 text-sm;
         }
 
-        tr:hover {
-            @apply bg-blue-50/50;
+        .table-jadwal thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table-jadwal th,
+        .table-jadwal td {
+            border: 1px solid #e2e8f0;
+        }
+
+        .table-jadwal thead th {
+            border-color: #1e293b;
+        }
+
+        .day-separator td {
+            padding: 0 !important;
+            border-left: none;
+            border-right: none;
+        }
+
+        .day-separator .day-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         select,
@@ -95,6 +134,19 @@
             outline: none;
         }
 
+        @media (max-width: 767px) {
+            .nav-blur .flex {
+                min-height: 56px;
+            }
+            .nav-blur h1 {
+                font-size: 1rem;
+            }
+            .nav-blur img {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+        }
+
         @media (min-width: 768px) {
             .filter-grid {
                 grid-template-columns: repeat(6, 1fr);
@@ -106,23 +158,26 @@
 <body class="antialiased">
 
     {{-- Navbar --}}
-    <nav class="sticky top-0 z-50"
-        style="background: rgba(255,255,255,0.92); backdrop-filter: blur(14px); border-bottom: 2px solid rgba(37,99,235,0.15); box-shadow: 0 4px 20px rgba(37,99,235,0.06);">
+    <nav class="nav-blur sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center gap-3">
-                    <img src="{{ asset('image/logo.png') }}" alt="Logo" class="w-9 h-9 object-contain">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <div class="flex items-center gap-4">
+                    <img src="{{ asset('image/logo.png') }}" alt="Logo" class="w-14 h-14 object-contain">
                     <div>
-                        <h1 class="font-bold text-sm text-blue-900">Sistem Penjadwalan</h1>
-                        <p class="text-[10px] text-slate-500">Fakultas Teknik Universitas Wiraraja</p>
+                        <h1 class="font-bold text-lg md:text-xl leading-tight text-slate-800">Sistem Penjadwalan</h1>
+                        <p class="text-slate-500 text-sm hidden md:block">Fakultas Teknik Universitas Wiraraja</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('welcome') }}" class="btn btn-ghost text-xs px-3 py-2">
-                        <i class="fas fa-home"></i> Beranda
+                <div class="flex items-center gap-2 md:gap-4">
+                    <a href="{{ route('welcome') }}"
+                        class="px-3 md:px-5 py-1.5 md:py-2 text-slate-700 hover:bg-blue-50 rounded-xl transition flex items-center gap-1.5 md:gap-2 text-sm md:text-base">
+                        <i class="fas fa-home text-blue-500"></i>
+                        <span class="hidden md:inline">Beranda</span>
                     </a>
-                    <a href="{{ route('login') }}" class="btn btn-primary text-xs px-3 py-2">
-                        <i class="fas fa-sign-in-alt"></i> Login
+                    <a href="{{ route('login') }}"
+                        class="px-3 md:px-5 py-1.5 md:py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition flex items-center gap-1.5 md:gap-2 font-semibold glow text-sm md:text-base">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span class="hidden md:inline">Login</span>
                     </a>
                 </div>
             </div>
@@ -183,27 +238,44 @@
                     <a href="{{ route('jadwalglobal.list') }}" class="btn btn-ghost px-3">
                         <i class="fas fa-undo"></i>
                     </a>
-                    <a href="{{ route('jadwalglobal.cetak', request()->all()) }}" target="_blank"
-                        class="btn btn-success px-3">
-                        <i class="fas fa-print"></i>
-                    </a>
                 </div>
             </form>
         </div>
 
         {{-- Table --}}
         <div class="glass rounded-2xl overflow-hidden">
+            <div class="bg-white px-4 md:px-5 py-3 border-b border-gray-200">
+                <div class="flex items-center justify-between gap-2">
+                    <h2 class="text-xs md:text-sm font-semibold text-gray-700 truncate">
+                        <i class="fas fa-table mr-1.5 text-blue-500"></i> Data Jadwal
+                    </h2>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <a href="{{ route('jadwalglobal.cetak', request()->all()) }}" target="_blank"
+                            class="inline-flex items-center gap-1 px-2.5 md:px-4 py-1.5 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg md:rounded-xl shadow transition hover:-translate-y-0.5">
+                            <i class="fas fa-print"></i>
+                            <span class="hidden sm:inline">Cetak</span>
+                        </a>
+                        <span class="text-xs text-gray-400">{{ $jadwals->count() }} jadwal</span>
+                    </div>
+                </div>
+            </div>
             <div class="overflow-x-auto">
-                <table class="min-w-full">
+                @php
+                    $currentDay = null;
+                    $rowNum = 0;
+                @endphp
+                <table class="table-jadwal min-w-full border-collapse">
                     <thead>
-                        <tr>
-                            <th>Hari</th>
-                            <th>Jam</th>
-                            <th>Mata Kuliah</th>
-                            <th>Kelas</th>
-                            <th>Prodi</th>
-                            <th>Dosen</th>
-                            <th>Ruangan</th>
+                        <tr class="bg-gray-50">
+                            <th class="text-gray-600">Hari</th>
+                            <th class="text-gray-600">Jam</th>
+                            <th class="text-gray-600">Mata Kuliah</th>
+                            <th class="text-gray-600">Kelas</th>
+                            <th class="text-gray-600">Prodi</th>
+                            <th class="text-gray-600 text-center">SKS</th>
+                            <th class="text-gray-600 text-center">SMT </th>
+                            <th class="text-gray-600">Dosen</th>
+                            <th class="text-gray-600">Ruangan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -222,19 +294,72 @@
                                     $hariNama =
                                         ['', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][$j->hari] ?? '-';
                                 }
+                                $dayChanged = $hariNama !== $currentDay;
+                                if ($dayChanged) {
+                                    $currentDay = $hariNama;
+                                    $rowNum = 0;
+                                }
                             @endphp
-                            <tr class="border-t border-gray-100">
-                                <td class="font-medium text-black-700">{{ $hariNama }}</td>
-                                <td>{{ $jamMulai }} - {{ $jamSelesai }}</td>
-                                <td>{{ $j->mataKuliah->nama ?? '-' }}</td>
-                                <td>{{ ($j->kelas->angkatan->tahun ?? '') . ($j->kelas->nama ?? '') }}</td>
-                                <td>{{ $j->kelas->angkatan->prodi->nama ?? '-' }}</td>
-                                <td>{{ $j->dosen->nama ?? '-' }}</td>
-                                <td>{{ $j->ruangan->kode ?? '-' }}</td>
+                            @if ($dayChanged)
+                                <tr class="day-separator">
+                                    <td colspan="9">
+                                        <div class="day-label bg-indigo-50 text-indigo-700 border-b border-indigo-100">
+                                            <i class="fas fa-calendar-day text-indigo-400"></i>
+                                            {{ $hariNama }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endif
+                            <tr class="{{ $rowNum % 2 == 0 ? 'bg-white' : 'bg-slate-50/50' }} hover:bg-blue-50/60">
+                                <td class="font-semibold text-slate-800">{{ $hariNama }}</td>
+                                <td class="text-slate-600 whitespace-nowrap">
+                                    <span class="font-medium text-slate-700">{{ $jamMulai }}</span>
+                                    <span class="text-slate-300">–</span>
+                                    <span>{{ $jamSelesai }}</span>
+                                </td>
+                                <td>
+                                    <span class="font-semibold text-slate-800">{{ $j->mataKuliah->nama ?? '-' }}</span>
+                                    @if (!empty($j->mataKuliah->kode))
+                                        <div class="text-xs text-slate-400 font-mono mt-0.5">{{ $j->mataKuliah->kode }}
+                                        </div>
+                                    @endif
+                                </td>
+                                <td>
+                                    <span
+                                        class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                        {{ ($j->kelas->angkatan->tahun ?? '') . ($j->kelas->nama ?? '') }}
+                                    </span>
+                                </td>
+                                <td class="text-slate-600">{{ $j->kelas->angkatan->prodi->nama ?? '-' }}</td>
+                                <td class="text-center">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium {{ ($j->mataKuliah->sks ?? 0) >= 4 ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700' }}">
+                                        {{ $j->mataKuliah->sks ?? '-' }}
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <span
+                                        class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                                        {{ $j->mataKuliah->semester_ke ?? '-' }}
+                                    </span>
+                                </td>
+                                <td class="text-slate-600">
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <i class="fas fa-user text-slate-400 text-xs"></i>
+                                        {{ $j->dosen->nama ?? '-' }}
+                                    </span>
+                                </td>
+                                <td class="text-slate-600">
+                                    <span class="inline-flex items-center gap-1.5">
+                                        <i class="fas fa-door-open text-slate-400 text-xs"></i>
+                                        {{ $j->ruangan->kode ?? '-' }}
+                                    </span>
+                                </td>
                             </tr>
+                            @php $rowNum++; @endphp
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-12 text-gray-400">
+                                <td colspan="9" class="text-center py-12 text-gray-400">
                                     <i class="fas fa-calendar-times text-4xl mb-3 block"></i>
                                     <p>Tidak ada data jadwal yang tersedia</p>
                                 </td>

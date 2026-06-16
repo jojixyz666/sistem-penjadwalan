@@ -21,6 +21,35 @@
         .modal-active {
             display: flex;
         }
+
+        .table-jadwal thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .table-jadwal tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        .day-separator td {
+            padding: 0 !important;
+        }
+
+        .day-separator .day-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .day-separator .day-label i {
+            font-size: 0.7rem;
+        }
     </style>
 @endpush
 
@@ -51,15 +80,15 @@
         @endif
 
         {{-- Form Filter --}}
-        <div class="bg-white rounded-lg shadow-md p-5 mb-6">
+        <div class="bg-white rounded-xl shadow-md p-5 mb-6">
             <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                <i class="fas fa-filter"></i> Filter Jadwal
+                <i class="fas fa-filter text-blue-500"></i> Filter Jadwal
             </h3>
             <form method="GET" action="{{ route('jadwalauth.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 @if (auth()->user()->role == 'admin')
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Program Studi</label>
-                        <select name="prodi_id" class="w-full border-gray-300 rounded-md shadow-sm">
+                        <select name="prodi_id" class="w-full border-gray-300 rounded-lg shadow-sm">
                             <option value="">-- Semua Prodi --</option>
                             @foreach ($prodiList as $prodi)
                                 <option value="{{ $prodi->id }}"
@@ -75,7 +104,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Kelas</label>
-                    <select name="kelas_id" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <select name="kelas_id" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Semua Kelas --</option>
                         @foreach ($kelasList as $kelas)
                             <option value="{{ $kelas->id }}" {{ request('kelas_id') == $kelas->id ? 'selected' : '' }}>
@@ -88,7 +117,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Dosen</label>
-                    <select name="dosen_id" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <select name="dosen_id" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="">-- Semua Dosen --</option>
                         @foreach ($dosenList as $dosen)
                             <option value="{{ $dosen->id }}" {{ request('dosen_id') == $dosen->id ? 'selected' : '' }}>
@@ -100,7 +129,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Tampilan</label>
-                    <select name="tampilan" class="w-full border-gray-300 rounded-md shadow-sm">
+                    <select name="tampilan" class="w-full border-gray-300 rounded-lg shadow-sm">
                         <option value="normal" {{ request('tampilan', 'normal') == 'normal' ? 'selected' : '' }}>Jadwal
                             Normal</option>
                         <option value="ramadan" {{ request('tampilan') == 'ramadan' ? 'selected' : '' }}>Jadwal Ramadan
@@ -112,79 +141,138 @@
                     <button type="submit" class="btn btn-primary flex-1">
                         <i class="fas fa-search"></i> Filter
                     </button>
-                    <button type="reset" class="btn btn-ghost px-3"">
+                    <button type="reset" class="btn btn-ghost px-3"
+                        onclick="window.location='{{ route('jadwalauth.index') }}'">
                         <i class="fas fa-undo"></i>
                     </button>
-                    <a href="{{ route('jadwalauth.cetak', request()->all()) }}" target="_blank"
-                        class="btn btn-success px-3">
-                        <i class="fas fa-print"></i>
-                    </a>
                 </div>
             </form>
         </div>
 
         {{-- Tabel Jadwal --}}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="px-5 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-700">
-                    @if ($tampilan == 'ramadan')
-                        <i class="fas fa-moon text-emerald-600"></i> Jadwal Ramadan
-                    @else
-                        <i class="fas fa-calendar-alt text-indigo-600"></i> Jadwal Normal
-                    @endif
-                </h3>
-                <span class="text-sm text-gray-500">Total: {{ $jadwals->count() }} jadwal</span>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="px-4 md:px-5 py-3 md:py-4 border-b border-gray-200">
+                <div class="flex items-center justify-between gap-2">
+                    <h3 class="text-xs md:text-lg font-semibold text-gray-700 truncate">
+                        @if ($tampilan == 'ramadan')
+                            <i class="fas fa-moon text-emerald-600"></i> Jadwal Ramadan
+                        @else
+                            <i class="fas fa-calendar-alt text-indigo-600"></i> Jadwal Normal
+                        @endif
+                    </h3>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <a href="{{ route('jadwalauth.cetak', request()->all()) }}" target="_blank"
+                            class="inline-flex items-center gap-1 px-2.5 md:px-4 py-1.5 md:py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg md:rounded-xl shadow transition hover:-translate-y-0.5">
+                            <i class="fas fa-print"></i>
+                            <span class="hidden sm:inline">Cetak</span>
+                        </a>
+                        <span class="text-xs text-gray-400">{{ $jadwals->count() }} jadwal</span>
+                    </div>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 @if ($jadwals->count() > 0)
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hari & Jam</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Mata Kuliah</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kelas</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ruangan</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Dosen</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">SKS</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Semester</th>
+                    @php
+                        $currentDay = null;
+                        $rowNum = 0;
+                    @endphp
+                    <table class="table-jadwal min-w-full">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th
+                                    class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Hari & Jam</th>
+                                <th
+                                    class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Mata Kuliah</th>
+                                <th
+                                    class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Kelas</th>
+                                <th
+                                    class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Ruangan</th>
+                                <th
+                                    class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    Dosen</th>
+                                <th
+                                    class="px-5 py-3.5 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    SKS</th>
+                                <th
+                                    class="px-5 py-3.5 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    SMT </th>
                                 @if (auth()->user()->role == 'admin')
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Prodi</th>
+                                    <th
+                                        class="px-5 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        Prodi</th>
                                 @endif
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 bg-white">
+                        <tbody class="divide-y divide-slate-100">
                             @foreach ($jadwals as $jadwal)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {{ $jadwal->hari_nama ?? '-' }}<br>
-                                        <span class="text-xs text-gray-500">{{ $jadwal->jam_mulai ?? '' }} -
-                                            {{ $jadwal->jam_selesai ?? '' }}</span>
+                                @php
+                                    $hari = $jadwal->hari_nama ?? '-';
+                                    $dayChanged = $hari !== $currentDay;
+                                    if ($dayChanged) {
+                                        $currentDay = $hari;
+                                        $rowNum = 0;
+                                    }
+                                @endphp
+                                @if ($dayChanged)
+                                    <tr class="day-separator">
+                                        <td colspan="{{ 7 + (auth()->user()->role == 'admin' ? 1 : 0) }}">
+                                            <div class="day-label bg-indigo-50 text-indigo-700 border-b border-indigo-100">
+                                                <i class="fas fa-calendar-day text-indigo-400"></i>
+                                                {{ $hari }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+                                <tr class="{{ $rowNum % 2 == 0 ? 'bg-white' : 'bg-slate-50/50' }} hover:bg-blue-50/60">
+                                    <td class="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                                        <span class="font-medium text-slate-800">{{ $jadwal->jam_mulai ?? '' }}</span>
+                                        <span class="text-slate-400">–</span>
+                                        <span class="text-slate-600">{{ $jadwal->jam_selesai ?? '' }}</span>
                                     </td>
-                                    <td class="px-6 py-4">
-                                        <div class="text-sm font-medium text-gray-900">
+                                    <td class="px-5 py-3.5">
+                                        <div class="text-sm font-semibold text-slate-800">
                                             {{ $jadwal->mataKuliah->nama ?? '-' }}</div>
-                                        <div class="text-xs text-gray-500">{{ $jadwal->mataKuliah->kode ?? '' }}</div>
+                                        <div class="text-xs text-slate-400 font-mono mt-0.5">
+                                            {{ $jadwal->mataKuliah->kode ?? '' }}</div>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {{ $jadwal->kelas->angkatan->tahun ?? '' }}{{ $jadwal->kelas->nama ?? '-' }}
+                                    <td class="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                                        <span
+                                            class="badge badge-blue">{{ $jadwal->kelas->angkatan->tahun ?? '' }}{{ $jadwal->kelas->nama ?? '-' }}</span>
                                     </td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">{{ $jadwal->ruangan->nama ?? '-' }}</td>
-
-                                    {{-- KOLOM DOSEN - MENAMPILKAN DOSEN DARI JADWAL --}}
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {{ $jadwal->dosen->nama ?? '-' }}
+                                    <td class="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fas fa-door-open text-slate-400 text-xs"></i>
+                                            {{ $jadwal->ruangan->nama ?? '-' }}
+                                        </span>
                                     </td>
-
-                                    <td class="px-6 py-4 text-sm text-gray-700">{{ $jadwal->mataKuliah->sks ?? '-' }}</td>
-                                    <td class="px-6 py-4 text-sm text-gray-700">
-                                        {{ ucfirst($jadwal->semester ?? ($jadwal->mataKuliah->semester ?? '-')) }}
+                                    <td class="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+                                        <span class="inline-flex items-center gap-1.5">
+                                            <i class="fas fa-user text-slate-400 text-xs"></i>
+                                            {{ $jadwal->dosen->nama ?? '-' }}
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-3.5 text-sm text-center whitespace-nowrap">
+                                        <span
+                                            class="badge {{ $jadwal->mataKuliah->sks >= 4 ? 'badge-purple' : 'badge-indigo' }}">
+                                            {{ $jadwal->mataKuliah->sks ?? '-' }} SKS
+                                        </span>
+                                    </td>
+                                    <td class="px-5 py-3.5 text-sm text-center whitespace-nowrap">
+                                        <span class="badge bg-slate-100 text-slate-700">
+                                            {{ $jadwal->mataKuliah->semester_ke ?? '-' }}
+                                        </span>
                                     </td>
                                     @if (auth()->user()->role == 'admin')
-                                        <td class="px-6 py-4 text-sm text-gray-700">
+                                        <td class="px-5 py-3.5 text-sm text-slate-700 whitespace-nowrap">
                                             {{ $jadwal->kelas->angkatan->prodi->nama ?? '-' }}
                                         </td>
                                     @endif
                                 </tr>
+                                @php $rowNum++; @endphp
                             @endforeach
                         </tbody>
                     </table>
